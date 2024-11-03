@@ -21,11 +21,4 @@ export const {
       },
     }),
   ],
-  callbacks: {
-    authorized({ request, auth }) {
-      const { pathname } = request.nextUrl
-      console.log('hello', pathname, auth)
-      return true
-    },
-  }
 });
