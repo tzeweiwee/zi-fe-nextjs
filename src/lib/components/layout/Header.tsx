@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
-import { SignInButton } from "@/src/components/auth/SignInButton/SignInButton";
-import { SignOutButton } from "@/src/components/auth/SignOutButton";
+import { SignInButton } from "@/src/lib/components/auth/SignInButton";
+import { SignOutButton } from "@/src/lib/components/auth/SignOutButton";
 import Image from "next/image";
 
 export const Header = async () => {

@@ -1,5 +1,5 @@
 import { signOut } from "@/auth";
-import { Button } from "@/src/components/common/Button";
+import { Button } from "@lib/components/ui/button";
 
 export const SignOutButton = () => {
   return (

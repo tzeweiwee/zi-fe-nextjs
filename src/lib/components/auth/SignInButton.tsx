@@ -1,4 +1,4 @@
-import { Button } from "@/src/components/common/Button";
+import { Button } from "@lib/components/ui/button";
 import Link from "next/link";
 
 export const SignInButton = () => {

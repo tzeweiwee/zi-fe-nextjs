@@ -1,3 +1,9 @@
-export default function Home() {
-  return <div>Show a list of users here</div>;
+import { UsersTable } from "@/src/lib/components/users/UsersTable";
+
+export default async function Home() {
+  return (
+    <div>
+      <UsersTable />
+    </div>
+  );
 }
