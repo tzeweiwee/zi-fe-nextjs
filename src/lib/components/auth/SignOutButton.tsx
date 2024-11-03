@@ -8,7 +8,6 @@ export const SignOutButton = () => {
     <Button
       onClick={async () => {
         await signOut();
-        window.location.href = "/";
       }}
     >
       Sign out
