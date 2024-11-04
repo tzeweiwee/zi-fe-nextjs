@@ -3,7 +3,7 @@ import { getUsersResponse } from '@/src/lib/types/api';
 import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 
 
-const baseQuery = fetchBaseQuery({ baseUrl: process.env.APP_BASE_URL || 'http://localhost:3000' })
+const baseQuery = fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_APP_BASE_URL || 'http://localhost:3000' })
 const baseQueryWithRelogin: BaseQueryFn<
   string | FetchArgs,
   unknown,
