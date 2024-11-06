@@ -6,14 +6,16 @@ This is built with Next.js 15, NextAuth v5, Redux Toolkit / RTK Query
 
 First, run the development server:
 
+Due to React 19, many libraries have not listed React 19 as a peer dep as of now. Please use `pnpm` or use `--force` if you want to use `npm`.
+
+Reference: https://ui.shadcn.com/docs/react-19
+
 ```bash
+npm i --force
 npm run dev
 # or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm i
+pnpm run dev
 ```
 
 ## User Journey

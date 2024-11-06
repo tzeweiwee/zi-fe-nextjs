@@ -1,6 +1,7 @@
 // export const dynamic = 'force-static'
 
 import { User } from "@/src/lib/types/user";
+import { maskString } from "@/src/lib/utils/string";
 
 export type UsersResponse = {
   page: number;
@@ -43,6 +44,14 @@ export async function GET() {
     return false;
   })
 
+  const usersWithMaskedEmail = filteredUsers.map((user) => {
+    return {
+      ...user,
+      email: maskString(user.email),
+      isEmailMasked: true
+    }
+  });
 
-  return Response.json({ data: filteredUsers })
+
+  return Response.json({ data: usersWithMaskedEmail })
 }

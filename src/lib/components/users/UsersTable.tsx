@@ -1,9 +1,7 @@
 "use client";
 
-import { Skeleton } from "@lib/components/ui/skeleton";
-import { useGetUsersQuery } from "@/src/lib/services/users";
-import { User } from "@/src/lib/types/user";
-import { useMemo, useState } from "react";
+import { getUser } from "@/src/lib/actions/users";
+import { Icons } from "@/src/lib/components/ui/icons";
 import {
   Table,
   TableBody,
@@ -13,15 +11,55 @@ import {
   TableHeader,
   TableRow,
 } from "@/src/lib/components/ui/table";
-import { Button } from "@/src/lib/components/ui/button";
+import { updateUser, useGetUsersQuery } from "@/src/lib/services/users";
+import { useAppDispatch } from "@/src/lib/store";
+import { User } from "@/src/lib/types/user";
 import { maskString } from "@/src/lib/utils/string";
+import { Skeleton } from "@lib/components/ui/skeleton";
+import { useCallback, useMemo } from "react";
 
 export const UsersTable = () => {
+  const dispatch = useAppDispatch();
   const { data, isLoading, error } = useGetUsersQuery();
-  const [maskEmailAddress, setMaskEmailAddress] = useState(true);
 
-  const tableRows = useMemo(
-    () => [
+  const renderEmail = useCallback(
+    (value: string, user: User) => {
+      return user.isEmailMasked ? (
+        <span
+          onClick={async () => {
+            // fetches user data from API
+            const newUser = await getUser(user.id);
+            // replaces user data in the store
+            dispatch(updateUser(user.id, newUser.data));
+          }}
+          className="cursor-pointer"
+        >
+          {value}
+          <Icons.EyeOpen className="w-4 h-4 ml-1" />
+        </span>
+      ) : (
+        <span
+          onClick={() => {
+            dispatch(
+              updateUser(user.id, {
+                ...user,
+                email: maskString(user.email),
+                isEmailMasked: true,
+              })
+            );
+          }}
+          className="cursor-pointer"
+        >
+          {value}
+          <Icons.EyeNone className="w-4 h-4 ml-1" />
+        </span>
+      );
+    },
+    [dispatch]
+  );
+
+  const tableRows = useMemo(() => {
+    return [
       {
         title: "ID",
         key: "id",
@@ -29,12 +67,7 @@ export const UsersTable = () => {
       {
         title: "Email",
         key: "email",
-        render: (value: string) => {
-          if (maskEmailAddress) {
-            return maskString(value);
-          }
-          return value;
-        },
+        render: renderEmail,
       },
       {
         title: "First Name",
@@ -48,12 +81,12 @@ export const UsersTable = () => {
         title: "Avatar",
         key: "avatar",
         render: (value: string) => (
+          // eslint-disable-next-line @next/next/no-img-element
           <img src={value} alt="avatar" style={{ width: 50, height: 50 }} />
         ),
       },
-    ],
-    [maskEmailAddress]
-  );
+    ];
+  }, [renderEmail]);
 
   if (isLoading) {
     return (
@@ -76,14 +109,6 @@ export const UsersTable = () => {
   return (
     <div className="w-full overflow-x-auto flex justify-center items-center">
       <div className="flex flex-col p-6 items-center justify-center min-w-[600px] max-w-[800px]">
-        <div className="flex justify-end w-full">
-          <Button
-            onClick={() => setMaskEmailAddress(!maskEmailAddress)}
-            className="mb-4"
-          >
-            {maskEmailAddress ? "Show" : "Hide"} Email
-          </Button>
-        </div>
         <Table>
           <TableCaption>Showing {users.length} users</TableCaption>
           <TableHeader>
@@ -98,8 +123,10 @@ export const UsersTable = () => {
               <TableRow key={user.id} className="h-10">
                 {tableRows.map((row) => (
                   <TableCell key={row.key}>
-                    {row.render?.(user[row.key as keyof User] as string) ||
-                      user[row.key as keyof User]}
+                    {row.render?.(
+                      user[row.key as keyof User] as string,
+                      user
+                    ) || user[row.key as keyof User]}
                   </TableCell>
                 ))}
               </TableRow>
